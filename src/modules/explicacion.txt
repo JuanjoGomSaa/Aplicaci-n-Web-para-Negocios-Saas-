@@ -1,0 +1,12 @@
+Aquí vivi lo que el usuario usa realmente.
+
+Se encuentra:
+    1. Los modulos independientes
+        CRM
+        E-commerce 
+        Reservas 
+    2. Responsabilidades 
+        Mostrar datos
+        Manejar lógica del módulo 
+        Interacción con el usuario 
+Ejemplo: Agregar a un cliente solo debe ser problema del CRM 

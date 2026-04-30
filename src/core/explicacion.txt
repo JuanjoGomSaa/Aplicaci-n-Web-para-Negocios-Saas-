@@ -1,0 +1,8 @@
+En esta carpeta viven cosas que afectan a toda la app, no un módulo específico.
+
+Responsabilidades:
+    1. Controlar navegación 
+    2. Manejar estado global (store)
+    3. Inicializar la app
+
+Ejemplo: Cuando cambiamos del dashboard al CRM, core es el encargado. 

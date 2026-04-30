@@ -1,4 +1,4 @@
-import {navBar} from './core/route.js';
+import {routerNavigator} from './core/route.js';
 
 
 function main() {
@@ -8,7 +8,7 @@ function main() {
     navSidebar.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         if (!link) return; // Si no se hizo clic en un enlace, salir
-        navBar(link.dataset.route);
+        routerNavigator(link.dataset.route);
     });
      
    

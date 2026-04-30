@@ -1,24 +1,18 @@
-import { renderDashboard} from "../modules/dashboard/dashboardView.js";
-import { renderClientes } from "../modules/clientes/clientesView.js";
-import { renderECommerce } from "../modules/eCommerce/eCommerceView.js";
-import { renderReservas } from "../modules/reservas/reservasView.js";   
-import { renderNotFound } from "../modules/notFound/notFoundView.js";
+import { renderDashboard} from "../modules/dashboard/dashboard.view.js";
+import { renderClientes } from "../modules/clientes/clientes.view.js";
+import { renderECommerce } from "../modules/ecommerce/ecommerce.view.js";
+import { renderReservas } from "../modules/reservas/reservasview.js";   
+import { renderNotFound } from "../modules/notFound/notFound.view.js";
 
-export function navBar(link) {
-    switch (link) {
-        case 'dashboard':
-            renderDashboard();  
-            break;
-        case 'clientes':
-            renderClientes(); 
-            break;
-        case 'eCommerce':
-            renderECommerce();
-            break;
-        case 'reservas':
-            renderReservas();
-            break;
-        default:
-            renderNotFound();
-     }
+
+const router = {
+    'dashboard': renderDashboard,
+    'clientes': renderClientes,
+    'ecommerce': renderECommerce,
+    'reservas': renderReservas
+};
+
+export const routerNavigator = function navBar(link) {
+   router[link] ? router[link](): renderNotFound();
 }
+

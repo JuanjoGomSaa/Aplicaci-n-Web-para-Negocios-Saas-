@@ -1,17 +1,26 @@
 import {routerNavigator} from './core/route.js';
 
 
-function main() {
+function main() { 
     console.log('Aplicación iniciada');
     const navSidebar = document.querySelector('#nav-sidebar');
 
+    window.addEventListener('hashchange', () => { 
+        routerNavigator(window.location.hash.replace('#', '')); // Navegar a la ruta correspondiente
+    });
+
+    if (!window.location.hash) {
+        window.location.hash = 'dashboard'; // Establecer la ruta predeterminada
+    }
+
     navSidebar.addEventListener('click', (e) => {
         const link = e.target.closest('a');
+
         if (!link) return; // Si no se hizo clic en un enlace, salir
-        routerNavigator(link.dataset.route);
+
+        window.location.hash = link.dataset.route; // Actualizar el hash en la URL
     });
-     
-   
+
 }
 
 main();

@@ -3,4 +3,4 @@ export const store = {
   productos: [],
   pedidos: [],
   reservas: []
-};
+}

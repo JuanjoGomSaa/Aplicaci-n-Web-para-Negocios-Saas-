@@ -65,44 +65,52 @@ function validar() {
 }
 
 function existeCliente (cedulaParam) {
-    return store.clientes.some(c => c.identificator === cedulaParam);
+    return store.clientesFiltrados.some(c => c.identificator === cedulaParam);
 }
 
 function addCLiente(cliente) {
     // Agregar clientes a Store
     store.clientes.push(cliente);
+    store.clientesFiltrados.push(cliente); // Si quieres mantener una lista filtrada también actualizada
+
     console.log('Clientes en Store:', store.clientes); 
     
     
     //Envio datos al cliente despues de agregarlo a Store
-     renderClientesView(cliente)
+    renderClientesView();
  
 }
 
 //Esta funcion recibe los clientes desde la Store y los envía a la vista para renderizarlos
-function enviarClientes(clientes) {
-    // Lógica para enviar clientes a la vista
+// function enviarClientes(clientes) {
+//     // Lógica para enviar clientes a la vista
    
-    clientes.forEach(element => {
-        renderClientesView(element);
-    });
-}
+//     clientes.forEach(element => {
+//         renderClientesView(element);
+//     });
+// }
 
 export function eliminarCliente() {
     //Lógica para eliminar cliente de la Store y actualizar la vista
     console.log('Eliminando cliente...');
-    const container = document.getElementById('bttnContainer');
+    const container = document.getElementById('clientes-list');
 
 
     container.addEventListener('click', (e) => {
-        container.forEach(element => {
-            const btnEliminar = e.target.closest('#btn-eliminar');
+    
+           const btnEliminar = e.target.closest('.btn-delete');
             if (!btnEliminar) return; // Si no se hizo clic en un botón de eliminar, salir
 
-            const id = e.target.dataset.id;
+            const id = btnEliminar.dataset.id;
             console.log(id);
-        });
 
+            store.clientesFiltrados.forEach(cliente => {
+                console.log(cliente);
+                const newStore = store.clientes.filter(cliente => cliente.id !== id);
+                store.clientesFiltrados = newStore; // Actualizar la lista filtrada también
+                console.log('Clientes después de eliminar:', newStore);
+                renderClientesView(); // Volver a renderizar la vista con la lista actualizada
+            });
 
     }); 
 

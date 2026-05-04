@@ -7,14 +7,13 @@ let contador = 0; //persiste entre llamadas
 let bandera = false; 
 
 export function setupCRM() {
+
     const formCrearCliente = document.getElementById('form-cliente');
 
     formCrearCliente.addEventListener('submit', (e) => {
         e.preventDefault();
 
         if (!validar()) return; // si algo falla, para aquí
-        
-        
        
         const nombre   = document.getElementById('nombre-cliente').value.trim();
         const email    = document.getElementById('email-cliente').value.trim();
@@ -41,10 +40,10 @@ export function setupCRM() {
             };
             
             addCLiente(cliente);
+            
 
             console.log('Cliente creado:', cliente);
     
-        
     });
 }
 
@@ -79,6 +78,7 @@ function addCLiente(cliente) {
      renderClientesView(cliente)
  
 }
+
 //Esta funcion recibe los clientes desde la Store y los envía a la vista para renderizarlos
 function enviarClientes(clientes) {
     // Lógica para enviar clientes a la vista
@@ -86,4 +86,25 @@ function enviarClientes(clientes) {
     clientes.forEach(element => {
         renderClientesView(element);
     });
+}
+
+export function eliminarCliente() {
+    //Lógica para eliminar cliente de la Store y actualizar la vista
+    console.log('Eliminando cliente...');
+    const container = document.getElementById('bttnContainer');
+
+
+    container.addEventListener('click', (e) => {
+        container.forEach(element => {
+            const btnEliminar = e.target.closest('#btn-eliminar');
+            if (!btnEliminar) return; // Si no se hizo clic en un botón de eliminar, salir
+
+            const id = e.target.dataset.id;
+            console.log(id);
+        });
+
+
+    }); 
+
+
 }

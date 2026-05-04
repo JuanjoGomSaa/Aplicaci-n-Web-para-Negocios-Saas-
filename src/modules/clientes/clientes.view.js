@@ -17,5 +17,6 @@ export function renderClientes() {
         <div id="clientes-list"></div>
         
     `;
-    setupCRM();
+  
 };
+ 

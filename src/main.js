@@ -9,9 +9,8 @@ function main() {
         routerNavigator(window.location.hash.replace('#', '')); // Navegar a la ruta correspondiente
     });
 
-    if (!window.location.hash) {
-        window.location.hash = 'dashboard'; // Establecer la ruta predeterminada
-    }
+    window.location.hash = 'dashboard';
+    routerNavigator('dashboard'); // Renderizar dashboard manualmente
 
     navSidebar.addEventListener('click', (e) => {
         const link = e.target.closest('a');

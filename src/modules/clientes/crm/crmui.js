@@ -1,5 +1,4 @@
 import { store } from '../../../core/store.js';
-import { eliminarCliente } from './crm.js';
 
 
 console.log('Clientes en Store al cargar la vista:', store.clientesFiltrados);
@@ -22,7 +21,7 @@ export function renderClientesView() {
                 <p>Creado el: ${cliente.createdAt}</p>
 
                 <div class="cliente-actions">
-                    <button class="btn-edit">Editar</button>
+                    <button class="btn-edit" data-id="${cliente.id}">Editar</button>
                     <button class="btn-delete" data-id="${cliente.id}">Eliminar</button>
                 </div>
             </div>

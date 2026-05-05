@@ -1,56 +1,111 @@
 import {store} from '../../../core/store.js';
 import { renderClientesView } from './crmui.js';
 
-console.log('CRM Module Loaded');
 
 let contador = 0; //persiste entre llamadas
-let bandera = false; 
+let banderaEditar = false; 
+let clienteAEditar = null; // Variable para almacenar el cliente que se va a editar
+
+//Función crear
+
+function handleCrear(e) {
+    console.log('handleCrear ejecutado');
+    const formCrearCliente = document.getElementById('form-cliente');
+  
+    e.preventDefault();
+    if (!validar()) return; // si algo falla, para aquí
+
+    const nombre   = document.getElementById('nombre-cliente').value.trim();
+    const email    = document.getElementById('email-cliente').value.trim();
+    const cedula = document.getElementById('identificator-cliente').value.trim();
+    const telefono = document.getElementById('telefono-cliente').value.trim();
+
+
+    if (existeCliente(cedula)) {
+        alert('Ya existe un cliente con esta cédula');
+        return;
+    }
+    
+    contador++;
+    const cliente = {
+        id: `CLI-${String(contador).padStart(4, '0')}`,
+        name: nombre,
+        email: email,
+        identificator: cedula,
+        phone: telefono,
+        createdAt: new Date().toLocaleDateString('es-CO', {
+            day: '2-digit', month: 'long', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        })
+    };
+    
+    addCLiente(cliente);
+    formCrearCliente.reset();
+}
+
+//Funcion Editar
+
+function handleEditar(e) {
+    console.log('handleEditar ejecutado');
+    e.preventDefault();
+
+    const nombre   = document.getElementById('nombre-cliente');
+    const email    = document.getElementById('email-cliente');
+    const cedula = document.getElementById('identificator-cliente');
+    const telefono = document.getElementById('telefono-cliente');
+    
+
+    if(!validar()) return;
+    if (existeClienteEditado(cedula)) {
+        alert('Ya existe un cliente con esta cédulaaaa');
+        return;
+    }
+
+    // contador++;  
+
+    // const cliente = {
+    //     id: `CLI-${String(contador).padStart(4, '0')}`,
+    //     name: nombre,
+    //     email: email,
+    //     identificator: cedula,
+    //     phone: telefono,
+    //     createdAt: new Date().toLocaleDateString('es-CO', {
+    //         day: '2-digit', month: 'long', year: 'numeric',
+    //         hour: '2-digit', minute: '2-digit'
+    //     })
+    // };
+    
+    // addCLiente(cliente);
+    // formCrearCliente.reset();
+
+    banderaEditar = false;
+    clienteAEditar = null;
+}
+
 
 export function setupCRM() {
+    const form = document.getElementById('form-cliente');
 
-    const formCrearCliente = document.getElementById('form-cliente');
+    // Primero limpias los dos posibles listeners
+    form.removeEventListener('submit', handleCrear);
+    form.removeEventListener('submit', handleEditar);
 
-    formCrearCliente.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        if (!validar()) return; // si algo falla, para aquí
-       
-        const nombre   = document.getElementById('nombre-cliente').value.trim();
-        const email    = document.getElementById('email-cliente').value.trim();
-        const cedula = document.getElementById('identificator-cliente').value.trim();
-        const telefono = document.getElementById('telefono-cliente').value.trim();
-
-        if (existeCliente(cedula)) {
-            alert('Ya existe un cliente con esta cédula');
-            return;
-        }
-
-        formCrearCliente.reset();
-
-            contador++;
-
-            const cliente = {
-                id: `CLI-${String(contador).padStart(4, '0')}`,
-                name: nombre,
-                email: email,
-                identificator: cedula,
-                phone: telefono,
-                createdAt: new Date().toLocaleDateString('es-CO', {
-                    day: '2-digit', month: 'long', year: 'numeric',
-                    hour: '2-digit', minute: '2-digit'
-                })
-            };
-            
-            addCLiente(cliente);
-            
-
-            console.log('Cliente creado:', cliente);
+    if (!banderaEditar) {
+        console.log('HandleCrear registrado');
+        form.addEventListener('submit', handleCrear);
+    } else {
+        console.log('HandleEditar registrado');
+        form.addEventListener('submit', handleEditar);
+    }
     
-    });
+    // Luego registras solo el que toca
 
+
+    editarCliente();
     eliminarCliente();
 }
 
+// Validar los datos del formulario antes de crear o editar un cliente
 function validar() {
     const nombre   = document.getElementById('nombre-cliente').value.trim();
     const email    = document.getElementById('email-cliente').value.trim();
@@ -66,35 +121,34 @@ function validar() {
     if (digits.length < 7) ok = false;
 
     return ok;
+
 }
 
+// Aquí se valida si ya existe un cliente con la misma cédula antes de agregarlo a la Store
 function existeCliente (cedulaParam) {
     return store.clientesFiltrados.some(c => c.identificator === cedulaParam);
 }
 
+function existeClienteEditado (cedulaParam) {
+    const clientesNoSeleccionados = store.clientesFiltrados.filter(c => c.id !== clienteAEditar.id);
+
+    console.log('Clientes que no estan seleccionados', clientesNoSeleccionados);
+    
+    return clientesNoSeleccionados.some(c => c.identificator === cedulaParam);
+}
+
+// Agregar cliente a la Store y actualizar la vista
 function addCLiente(cliente) {
     // Agregar clientes a Store
     store.clientes.push(cliente);
     store.clientesFiltrados.push(cliente); // Si quieres mantener una lista filtrada también actualizada
-
-    console.log('Clientes en Store:', store.clientes); 
-    
     
     //Envio datos al cliente despues de agregarlo a Store
     renderClientesView();
- 
 }
 
-//Esta funcion recibe los clientes desde la Store y los envía a la vista para renderizarlos
-// function enviarClientes(clientes) {
-//     // Lógica para enviar clientes a la vista
-   
-//     clientes.forEach(element => {
-//         renderClientesView(element);
-//     });
-// }
-
-export function eliminarCliente() {
+// Eliminar cliente de la Store y actualizar la vista
+function eliminarCliente() {
     const container = document.getElementById('clientes-list');
 
     container.addEventListener('click', (e) => {
@@ -105,8 +159,38 @@ export function eliminarCliente() {
 
         // Filtra ambas listas correctamente, sin forEach innecesario
         store.clientesFiltrados = store.clientesFiltrados.filter(c => c.id !== id);
-
-        console.log('Clientes después de eliminar:', store.clientesFiltrados);
+    
         renderClientesView();
     });
 }
+
+// Editar cliente
+export function editarCliente() {
+    const container = document.getElementById('clientes-list');
+
+    container.addEventListener('click', (e) => {
+        const btnEditar =  e.target.closest('.btn-edit');
+        if(!btnEditar) return; 
+        
+        banderaEditar = true;
+        const id = btnEditar.dataset.id;
+        clienteAEditar = store.clientesFiltrados.find(c => c.id === id);
+
+        document.getElementById('nombre-cliente').value = clienteAEditar.name;
+        document.getElementById('email-cliente').value = clienteAEditar.email;
+        document.getElementById('identificator-cliente').value = clienteAEditar.identificator;
+        document.getElementById('telefono-cliente').value = clienteAEditar.phone;
+
+        setupCRM();
+        });     
+}
+
+
+//Esta funcion recibe los clientes desde la Store y los envía a la vista para renderizarlos
+// function enviarClientes(clientes) {
+//     // Lógica para enviar clientes a la vista
+   
+//     clientes.forEach(element => {
+//         renderClientesView(element);
+//     });
+// }

@@ -5,7 +5,7 @@ import { renderDashboard} from "../modules/dashboard/dashboard.view.js";
 import { renderClientes } from "../modules/clientes/clientes.view.js";
 import { setupCRM } from "../modules/clientes/crm/crm.js";
 import { renderClientesView } from "../modules/clientes/crm/crmui.js";
-import { eliminarCliente } from "../modules/clientes/crm/crm.js";
+
 
 // import { eliminarCliente } from "../modules/clientes/crm/crm.js";
 

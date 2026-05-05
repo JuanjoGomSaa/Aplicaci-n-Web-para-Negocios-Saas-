@@ -25,6 +25,8 @@ export function setupCRM() {
             return;
         }
 
+        formCrearCliente.reset();
+
             contador++;
 
             const cliente = {
@@ -45,6 +47,8 @@ export function setupCRM() {
             console.log('Cliente creado:', cliente);
     
     });
+
+    eliminarCliente();
 }
 
 function validar() {
@@ -91,28 +95,18 @@ function addCLiente(cliente) {
 // }
 
 export function eliminarCliente() {
-    //Lógica para eliminar cliente de la Store y actualizar la vista
-    console.log('Eliminando cliente...');
     const container = document.getElementById('clientes-list');
 
-
     container.addEventListener('click', (e) => {
-    
-           const btnEliminar = e.target.closest('.btn-delete');
-            if (!btnEliminar) return; // Si no se hizo clic en un botón de eliminar, salir
+        const btnEliminar = e.target.closest('.btn-delete');
+        if (!btnEliminar) return;
 
-            const id = btnEliminar.dataset.id;
-            console.log(id);
+        const id = btnEliminar.dataset.id;
 
-            store.clientesFiltrados.forEach(cliente => {
-                console.log(cliente);
-                const newStore = store.clientes.filter(cliente => cliente.id !== id);
-                store.clientesFiltrados = newStore; // Actualizar la lista filtrada también
-                console.log('Clientes después de eliminar:', newStore);
-                renderClientesView(); // Volver a renderizar la vista con la lista actualizada
-            });
+        // Filtra ambas listas correctamente, sin forEach innecesario
+        store.clientesFiltrados = store.clientesFiltrados.filter(c => c.id !== id);
 
-    }); 
-
-
+        console.log('Clientes después de eliminar:', store.clientesFiltrados);
+        renderClientesView();
+    });
 }

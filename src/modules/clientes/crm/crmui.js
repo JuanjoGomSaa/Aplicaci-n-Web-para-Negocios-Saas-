@@ -31,6 +31,5 @@ export function renderClientesView() {
     });
 
     listCliente.innerHTML = html;
-    
-    eliminarCliente();
+
 }    

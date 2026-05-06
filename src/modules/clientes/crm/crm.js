@@ -1,10 +1,11 @@
 import {store} from '../../../core/store.js';
-import { renderClientesView } from './crmui.js';
+import { renderClientesBuscados, renderClientesView } from './crmui.js';
 
 
 let contador = 0; //persiste entre llamadas
 let banderaEditar = false; 
 let clienteAEditar = null; // Variable para almacenar el cliente que se va a editar
+
 
 //Función crear
 
@@ -103,6 +104,8 @@ export function setupCRM() {
 
     container.removeEventListener('click', handleClickContainer); // remueve el anterior
     container.addEventListener('click', handleClickContainer);    // agrega uno nuevo
+
+    buscarCliente();
 }
 
 // Validar los datos del formulario antes de crear o editar un cliente
@@ -180,4 +183,23 @@ function handleClickContainer (e){
 
         setupCRM();
     }
+}
+
+function buscarCliente () {
+    const inputBuscarCliente = document.getElementById('buscar-cliente');
+    
+
+    inputBuscarCliente.addEventListener('input', (e) => {
+        const query = e.target.value;
+        store.clientesBuscados = store.clientesFiltrados.filter(c => 
+            c.name.toLowerCase().includes(query.toLowerCase())
+        );
+
+        if(store.clientesBuscados === 0){
+          renderClientesView();
+        }else{
+            renderClientesBuscados();
+        }
+        
+    });
 }

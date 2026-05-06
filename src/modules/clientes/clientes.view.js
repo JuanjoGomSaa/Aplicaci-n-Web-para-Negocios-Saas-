@@ -6,6 +6,7 @@ export function renderClientes() {
     content.innerHTML = `
         <h1>Clientes</h1>
         <p>Lista de tus clientes.</p>
+        <input id="buscar-cliente" type="text" placeholder="Buscar Cliente por Nombre">
         <form id="form-cliente" class="form-editar-cliente">
             <input id="nombre-cliente" type="text" placeholder="Nombre del cliente">
             <input id="email-cliente" type="email" placeholder="Email del cliente">

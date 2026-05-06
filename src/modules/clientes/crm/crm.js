@@ -1,6 +1,6 @@
 import {store} from '../../../core/store.js';
 import { renderClientesBuscados, renderClientesView } from './crmui.js';
-
+import { clientesActivos, clientesTotal } from './localstorage.js';
 
 let contador = 0; //persiste entre llamadas
 let banderaEditar = false; 
@@ -152,6 +152,9 @@ function addCLiente(cliente) {
     store.clientes.push(cliente);
     store.clientesFiltrados.push(cliente); // Si quieres mantener una lista filtrada también actualizada
     
+    localStorage.setItem("clientesActivos", JSON.stringify(store.clientesFiltrados))
+    localStorage.setItem("clientesTotal", JSON.stringify(store.clientes)); 
+
     //Envio datos al cliente despues de agregarlo a Store
     renderClientesView();
 }

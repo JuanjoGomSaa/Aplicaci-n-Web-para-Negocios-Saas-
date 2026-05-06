@@ -1,14 +1,14 @@
 import { store } from '../../../core/store.js';
+import { clientesActivos } from './localstorage.js';
 
-
-console.log('Clientes en Store al cargar la vista:', store.clientesFiltrados);
+console.log('Clientes en Store al cargar la vista:', store.clientesFiltrados); 
 
 export function renderClientesView() {
     const listCliente = document.getElementById('clientes-list');
     
     let html = '';
 
-    store.clientesFiltrados.forEach(cliente => {
+    JSON.parse(localStorage.getItem("clientesActivos")).forEach(cliente => {
         console.log('Renderizando clientes:', cliente);
         html += `
             <div class="cliente-card">

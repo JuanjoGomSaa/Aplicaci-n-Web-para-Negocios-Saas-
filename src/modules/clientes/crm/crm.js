@@ -46,40 +46,40 @@ function handleCrear(e) {
 //Funcion Editar
 
 function handleEditar(e) {
+    const formCrearCliente = document.getElementById('form-cliente');
     console.log('handleEditar ejecutado');
     e.preventDefault();
 
-    const nombre   = document.getElementById('nombre-cliente');
-    const email    = document.getElementById('email-cliente');
-    const cedula = document.getElementById('identificator-cliente');
-    const telefono = document.getElementById('telefono-cliente');
+    const nombre   = document.getElementById('nombre-cliente').value.trim();
+    const email    = document.getElementById('email-cliente').value.trim();
+    const cedula = document.getElementById('identificator-cliente').value.trim();
+    const telefono = document.getElementById('telefono-cliente').value.trim();
     
-
     if(!validar()) return;
-    if (existeClienteEditado(cedula)) {
-        alert('Ya existe un cliente con esta cédulaaaa');
-        return;
-    }
 
-    // contador++;  
+    if(existeClienteEditado(cedula)) return; 
 
-    // const cliente = {
-    //     id: `CLI-${String(contador).padStart(4, '0')}`,
-    //     name: nombre,
-    //     email: email,
-    //     identificator: cedula,
-    //     phone: telefono,
-    //     createdAt: new Date().toLocaleDateString('es-CO', {
-    //         day: '2-digit', month: 'long', year: 'numeric',
-    //         hour: '2-digit', minute: '2-digit'
-    //     })
-    // };
-    
-    // addCLiente(cliente);
-    // formCrearCliente.reset();
+    store.clientesFiltrados = store.clientesFiltrados.map(c => {
+        if(c.id === clienteAEditar.id){
+            return{
+                ...c,
+                name: nombre,
+                email: email,
+                identificator: cedula,
+                phone: telefono,
+            };
+        }
+        return c;
+    });
+
+    renderClientesView();
+
+    formCrearCliente.reset();
 
     banderaEditar = false;
     clienteAEditar = null;
+
+    setupCRM();
 }
 
 
@@ -99,10 +99,10 @@ export function setupCRM() {
     }
     
     // Luego registras solo el que toca
+    const container = document.getElementById('clientes-list');
 
-
-    editarCliente();
-    eliminarCliente();
+    container.removeEventListener('click', handleClickContainer); // remueve el anterior
+    container.addEventListener('click', handleClickContainer);    // agrega uno nuevo
 }
 
 // Validar los datos del formulario antes de crear o editar un cliente
@@ -130,11 +130,15 @@ function existeCliente (cedulaParam) {
 }
 
 function existeClienteEditado (cedulaParam) {
-    const clientesNoSeleccionados = store.clientesFiltrados.filter(c => c.id !== clienteAEditar.id);
+    const clientesNoSeleccionados = store.clientesFiltrados.filter(c => c.id !== cedulaParam);
 
     console.log('Clientes que no estan seleccionados', clientesNoSeleccionados);
     
-    return clientesNoSeleccionados.some(c => c.identificator === cedulaParam);
+    const clienteExiste = clientesNoSeleccionados.some(c => c.identificator === cedulaParam);
+    
+    alert('Existe un cliente con esta cedula');
+
+    return clienteExiste 
 }
 
 // Agregar cliente a la Store y actualizar la vista
@@ -147,32 +151,25 @@ function addCLiente(cliente) {
     renderClientesView();
 }
 
-// Eliminar cliente de la Store y actualizar la vista
-function eliminarCliente() {
-    const container = document.getElementById('clientes-list');
 
-    container.addEventListener('click', (e) => {
-        const btnEliminar = e.target.closest('.btn-delete');
-        if (!btnEliminar) return;
+// Handle Editar y Eliminar 
+function handleClickContainer (e){
+    // Eliminar 
+    const btnEliminar = e.target.closest('.btn-delete');
 
+    if(btnEliminar){
         const id = btnEliminar.dataset.id;
-
-        // Filtra ambas listas correctamente, sin forEach innecesario
         store.clientesFiltrados = store.clientesFiltrados.filter(c => c.id !== id);
-    
+
         renderClientesView();
-    });
-}
+    }
 
-// Editar cliente
-export function editarCliente() {
-    const container = document.getElementById('clientes-list');
+    //Edición 
+    const btnEditar =  e.target.closest('.btn-edit');
 
-    container.addEventListener('click', (e) => {
-        const btnEditar =  e.target.closest('.btn-edit');
-        if(!btnEditar) return; 
-        
+    if(btnEditar){
         banderaEditar = true;
+
         const id = btnEditar.dataset.id;
         clienteAEditar = store.clientesFiltrados.find(c => c.id === id);
 
@@ -182,15 +179,5 @@ export function editarCliente() {
         document.getElementById('telefono-cliente').value = clienteAEditar.phone;
 
         setupCRM();
-        });     
+    }
 }
-
-
-//Esta funcion recibe los clientes desde la Store y los envía a la vista para renderizarlos
-// function enviarClientes(clientes) {
-//     // Lógica para enviar clientes a la vista
-   
-//     clientes.forEach(element => {
-//         renderClientesView(element);
-//     });
-// }

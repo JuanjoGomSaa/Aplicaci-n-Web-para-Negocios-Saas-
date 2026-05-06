@@ -133,13 +133,15 @@ function existeCliente (cedulaParam) {
 }
 
 function existeClienteEditado (cedulaParam) {
-    const clientesNoSeleccionados = store.clientesFiltrados.filter(c => c.id !== cedulaParam);
+    const clientesNoSeleccionados = store.clientesFiltrados.filter(c => c.id !== clienteAEditar.id);
 
     console.log('Clientes que no estan seleccionados', clientesNoSeleccionados);
     
     const clienteExiste = clientesNoSeleccionados.some(c => c.identificator === cedulaParam);
+    if(clienteExiste){
+        alert('El cliente a editar no puede tener cedulas de otros clientes');
+    }
     
-    alert('Existe un cliente con esta cedula');
 
     return clienteExiste 
 }

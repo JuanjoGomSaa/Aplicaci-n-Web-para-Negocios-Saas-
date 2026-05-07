@@ -1,11 +1,12 @@
 import {store} from '../../../core/store.js';
-import { renderClientesBuscados, renderClientesView } from './crmui.js';
 import { clientesActivos, clientesTotal } from './localstorage.js';
+import { renderClientesBuscados, renderClientesView } from './crmui.js';
 
 let contador = 0; //persiste entre llamadas
 let banderaEditar = false; 
 let clienteAEditar = null; // Variable para almacenar el cliente que se va a editar
 
+contador = store.clientes.length;
 
 //Función crear
 
@@ -73,6 +74,8 @@ function handleEditar(e) {
         return c;
     });
 
+    localStorage.setItem("clientesActivos", JSON.stringify(store.clientesFiltrados));
+
     renderClientesView();
 
     formCrearCliente.reset();
@@ -105,6 +108,7 @@ export function setupCRM() {
     container.removeEventListener('click', handleClickContainer); // remueve el anterior
     container.addEventListener('click', handleClickContainer);    // agrega uno nuevo
 
+    renderClientesView();
     buscarCliente();
 }
 
@@ -169,6 +173,8 @@ function handleClickContainer (e){
         const id = btnEliminar.dataset.id;
         store.clientesFiltrados = store.clientesFiltrados.filter(c => c.id !== id);
 
+        localStorage.setItem("clientesActivos", JSON.stringify(store.clientesFiltrados));
+
         renderClientesView();
     }
 
@@ -190,21 +196,30 @@ function handleClickContainer (e){
     }
 }
 
-function buscarCliente () {
-    const inputBuscarCliente = document.getElementById('buscar-cliente');
-    
 
-    inputBuscarCliente.addEventListener('input', (e) => {
+function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
+
+function buscarCliente() {
+    const inputBuscarCliente = document.getElementById('buscar-cliente');
+
+    const handleBusqueda = debounce((e) => {
         const query = e.target.value;
-        store.clientesBuscados = store.clientesFiltrados.filter(c => 
+        store.clientesBuscados = store.clientesFiltrados.filter(c =>
             c.name.toLowerCase().includes(query.toLowerCase())
         );
 
-        if(store.clientesBuscados === 0){
-          renderClientesView();
-        }else{
+        if (store.clientesBuscados.length === 0) {
+            renderClientesView();
+        } else {
             renderClientesBuscados();
         }
-        
-    });
+    }, 300);
+
+    inputBuscarCliente.addEventListener('input', handleBusqueda);
 }

@@ -1,20 +1,18 @@
 import {store } from '../../../core/store.js'
 
 // 1. Al cargar la página, leer lo que ya había guardado
-export let clientesActivos = JSON.parse(
-  localStorage.getItem("clientesActivos")
-) ?? [];
+const clientesGuardados = JSON.parse(localStorage.getItem("clientesActivos")) ?? [];
+const clientesTotalGuardados = JSON.parse(localStorage.getItem("clientesTotal")) ?? [];
 
-export let clientesTotal = JSON.parse(
-  localStorage.getItem("clientesTotal")
-) ?? [];
+
+
+
+//Inicializar la store con los dataos persistidos
+store.clientesFiltrados = clientesGuardados;
+store.clientes = clientesTotalGuardados;
 
 localStorage.setItem("clientesActivos", JSON.stringify(store.clientesFiltrados));
 localStorage.setItem("clientesTotal", JSON.stringify(store.clientes)); 
 
 
-//Mandar al render 
-// renderClientesView(JSON.parse(localStorage.getItem("clientesActivos")));
-
-
-
+export { clientesGuardados as clientesActivos, clientesTotalGuardados as clientesTotal };

@@ -205,21 +205,21 @@ function debounce(fn, delay) {
     };
 }
 
-function buscarCliente() {
+function buscarCliente () {
     const inputBuscarCliente = document.getElementById('buscar-cliente');
+    
 
-    const handleBusqueda = debounce((e) => {
+    inputBuscarCliente.addEventListener('input', (e) => {
         const query = e.target.value;
-        store.clientesBuscados = store.clientesFiltrados.filter(c =>
+        store.clientesBuscados = store.clientesFiltrados.filter(c => 
             c.name.toLowerCase().includes(query.toLowerCase())
         );
 
-        if (store.clientesBuscados.length === 0) {
-            renderClientesView();
-        } else {
+        if(store.clientesBuscados === 0){
+          renderClientesView();
+        }else{
             renderClientesBuscados();
         }
-    }, 300);
-
-    inputBuscarCliente.addEventListener('input', handleBusqueda);
+        
+    });
 }

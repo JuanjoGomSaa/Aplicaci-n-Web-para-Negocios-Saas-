@@ -1,6 +1,7 @@
 import { store } from '../../../core/store.js';
 import { productosActivos, productosTotal } from './localstorage.js';
 import { renderProductosBuscados, renderProductosView } from './productosui.js';
+import { renderPedidosView } from './pedidosui.js';
 
 let contador      = 0;
 let banderaEditar = false;
@@ -40,6 +41,8 @@ function handleCrear(e) {
 
     addProducto(producto);
     form.reset();
+
+  
 }
 
 // ── Editar ─────────────────────────────────────────────────────────────────
@@ -96,6 +99,11 @@ export function setupProductos() {
 
     renderProductosView();
     buscarProducto();
+    
+    seleccionarProducto();
+    seleccionarCliente();
+
+    crearPedido();
 }
 
 // ── Validación ─────────────────────────────────────────────────────────────
@@ -139,6 +147,8 @@ function addProducto(producto) {
     localStorage.setItem("productosTotal",   JSON.stringify(store.productos));
 
     renderProductosView();
+
+    seleccionarProducto();
 }
 
 // ── Click delegado (Editar / Eliminar) ────────────────────────────────────
@@ -186,3 +196,64 @@ function buscarProducto() {
         }
     });
 }
+
+
+// Seleccionar Productos
+function seleccionarProducto() {
+    const opcionProducto = document.querySelector('#productos');
+    opcionProducto.innerHTML = '<option value="">-- Selecciona un Producto --</option>'; // limpiar  
+    store.productosFiltrados.forEach(producto => {
+        const opcion = document.createElement('option');
+        
+        opcion.value = producto.nombre; 
+        opcion.textContent = producto.nombre;
+
+        opcionProducto.appendChild(opcion);
+    });
+
+
+}
+
+// Seleccionar un Cliente
+function seleccionarCliente() {
+    const opcionCLiente = document.querySelector('#clienteSelect');
+    opcionCLiente.innerHTML = '<option value="">-- Selecciona un Cliente--</option>'; // limpiar  
+    store.clientesFiltrados.forEach(cliente => {
+        const opcion = document.createElement('option');
+        
+        opcion.value = cliente.name; 
+        opcion.textContent = cliente.name;
+
+        opcionCLiente.appendChild(opcion);
+    });
+}
+
+
+// Crear pedido
+
+function crearPedido() {
+    const formCrearPedido = document.getElementById('form-pedido'); 
+    formCrearPedido.addEventListener('submit', handleCrearPedido);
+}
+
+function handleCrearPedido(e) {
+    e.preventDefault();
+
+    const producto = document.getElementById('productos').value;
+    const cliente = document.getElementById('clienteSelect').value;
+    const cantidad = parseInt(document.getElementById('cantidadPedido').value);
+    console.log(producto, cliente, cantidad);
+
+    const pedidoObject = {
+        producto,
+        cliente,
+        cantidad,
+    }
+
+    store.pedidos.push(pedidoObject);
+    console.log(store.pedidos);
+
+    
+    renderPedidosView();
+}
+

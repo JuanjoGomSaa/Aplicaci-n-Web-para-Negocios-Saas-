@@ -1,5 +1,6 @@
 import { setupProductos } from './ecommerce/productos.js';
 
+
 const content = document.getElementById('content');
 
 export function renderECommerce() {
@@ -13,7 +14,17 @@ export function renderECommerce() {
             <section class="ec-section ec-section--pedido">
                 <h2 class="ec-section__title">Crear Pedido</h2>
                 <div id="crear-pedido-content" class="ec-section__placeholder">
-                    <!-- Aqui va tu flujo de 3 pasos -->
+                <form id="form-pedido" class"form-crear-pedido">
+                    <select id="productos">
+                        <option value=""> --Selecciona un Producto -- </option>
+                    </select>
+                    <select id="clienteSelect">
+                        <option value=""> --Selecciona un Cliente-- </option>
+                    </select>
+                    <input id="cantidadPedido"   type="number" placeholder="Cantidad a comprar" min="0" step="1">
+                    <button id="btn-submit-creacion" type="submit">Crear Pedido</button>
+                </form>
+                    
                 </div>
             </section>
 
@@ -46,4 +57,5 @@ export function renderECommerce() {
     `;
 
     setupProductos();
+
 }

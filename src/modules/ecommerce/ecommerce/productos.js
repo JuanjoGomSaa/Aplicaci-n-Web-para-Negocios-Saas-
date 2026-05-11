@@ -149,6 +149,7 @@ function addProducto(producto) {
     renderProductosView();
 
     seleccionarProducto();
+
 }
 
 // ── Click delegado (Editar / Eliminar) ────────────────────────────────────
@@ -200,19 +201,43 @@ function buscarProducto() {
 
 // Seleccionar Productos
 function seleccionarProducto() {
-    const opcionProducto = document.querySelector('#productos');
-    opcionProducto.innerHTML = '<option value="">-- Selecciona un Producto --</option>'; // limpiar  
+    const contenedorProductos = document.getElementById('contenedorProductos');
+    const agregarProductoBoton = document.getElementById('agregarProductoBoton');
+
+    const selectProductos = document.querySelector('#productos');
+    selectProductos.innerHTML = '<option value="">-- Selecciona un Producto --</option>'; // limpiar  
+
+    actualizarOpciones(selectProductos);
+
+    agregarProductoBoton.addEventListener('click', agregarSelect);
+}
+
+// Agregar Producto
+
+function agregarSelect() {
+    const contenedorProductos = document.getElementById('contenedorProductos');
+    const selectProductos = document.createElement('select');
+    selectProductos.innerHTML = '<option value="">-- Selecciona un Producto --</option>'; // limpiar  
+    
+    actualizarOpciones(selectProductos);
+
+    contenedorProductos.appendChild(selectProductos);
+}
+
+//Agregar las opciones a los select
+
+function actualizarOpciones(selectProductos) {
     store.productosFiltrados.forEach(producto => {
         const opcion = document.createElement('option');
         
         opcion.value = producto.nombre; 
         opcion.textContent = producto.nombre;
 
-        opcionProducto.appendChild(opcion);
+        selectProductos.appendChild(opcion);
     });
-
-
 }
+
+
 
 // Seleccionar un Cliente
 function seleccionarCliente() {
@@ -255,5 +280,6 @@ function handleCrearPedido(e) {
 
     
     renderPedidosView();
+
 }
 

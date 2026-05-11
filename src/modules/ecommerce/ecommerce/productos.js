@@ -1,7 +1,8 @@
 import { store } from '../../../core/store.js';
 import { productosActivos, productosTotal } from './localstorage.js';
-import { renderProductosBuscados, renderProductosView } from './productosui.js';
-import { renderPedidosView } from './pedidosui.js';
+import { renderProductosBuscados, renderProductosView } from './ui/productosui.js';
+import { renderPedidosView } from './ui/pedidosui.js';
+import { limpiarRenderSeleccionarProducto, renderSeleccionarProducto } from './ui/seleccionarProductoui.js';
 
 let contador      = 0;
 let banderaEditar = false;
@@ -99,11 +100,8 @@ export function setupProductos() {
 
     renderProductosView();
     buscarProducto();
-    
-    seleccionarProducto();
-    seleccionarCliente();
 
-    crearPedido();
+    seleccionarProducto();
 }
 
 // ── Validación ─────────────────────────────────────────────────────────────
@@ -147,7 +145,6 @@ function addProducto(producto) {
     localStorage.setItem("productosTotal",   JSON.stringify(store.productos));
 
     renderProductosView();
-
     seleccionarProducto();
 
 }
@@ -198,88 +195,11 @@ function buscarProducto() {
     });
 }
 
-
-// Seleccionar Productos
-function seleccionarProducto() {
-    const contenedorProductos = document.getElementById('contenedorProductos');
-    const agregarProductoBoton = document.getElementById('agregarProductoBoton');
-
-    const selectProductos = document.querySelector('#productos');
-    selectProductos.innerHTML = '<option value="">-- Selecciona un Producto --</option>'; // limpiar  
-
-    actualizarOpciones(selectProductos);
-
-    agregarProductoBoton.addEventListener('click', agregarSelect);
-}
-
-// Agregar Producto
-
-function agregarSelect() {
-    const contenedorProductos = document.getElementById('contenedorProductos');
-    const selectProductos = document.createElement('select');
-    selectProductos.innerHTML = '<option value="">-- Selecciona un Producto --</option>'; // limpiar  
-    
-    actualizarOpciones(selectProductos);
-
-    contenedorProductos.appendChild(selectProductos);
-}
-
-//Agregar las opciones a los select
-
-function actualizarOpciones(selectProductos) {
-    store.productosFiltrados.forEach(producto => {
-        const opcion = document.createElement('option');
-        
-        opcion.value = producto.nombre; 
-        opcion.textContent = producto.nombre;
-
-        selectProductos.appendChild(opcion);
+//Seleccionar Productos 
+function seleccionarProducto(){
+    limpiarRenderSeleccionarProducto();
+    store.productosFiltrados.forEach(element => {
+        renderSeleccionarProducto(element);
     });
-}
-
-
-
-// Seleccionar un Cliente
-function seleccionarCliente() {
-    const opcionCLiente = document.querySelector('#clienteSelect');
-    opcionCLiente.innerHTML = '<option value="">-- Selecciona un Cliente--</option>'; // limpiar  
-    store.clientesFiltrados.forEach(cliente => {
-        const opcion = document.createElement('option');
-        
-        opcion.value = cliente.name; 
-        opcion.textContent = cliente.name;
-
-        opcionCLiente.appendChild(opcion);
-    });
-}
-
-
-// Crear pedido
-
-function crearPedido() {
-    const formCrearPedido = document.getElementById('form-pedido'); 
-    formCrearPedido.addEventListener('submit', handleCrearPedido);
-}
-
-function handleCrearPedido(e) {
-    e.preventDefault();
-
-    const producto = document.getElementById('productos').value;
-    const cliente = document.getElementById('clienteSelect').value;
-    const cantidad = parseInt(document.getElementById('cantidadPedido').value);
-    console.log(producto, cliente, cantidad);
-
-    const pedidoObject = {
-        producto,
-        cliente,
-        cantidad,
-    }
-
-    store.pedidos.push(pedidoObject);
-    console.log(store.pedidos);
-
-    
-    renderPedidosView();
-
 }
 

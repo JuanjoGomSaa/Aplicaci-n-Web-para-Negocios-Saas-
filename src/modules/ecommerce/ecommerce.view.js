@@ -15,27 +15,8 @@ export function renderECommerce() {
                 <h2 class="ec-section__title">Crear Pedido</h2>
 
                 <div id="crear-pedido-content" class="ec-section__placeholder">
-
-                    <form id="form-pedido" class"form-crear-pedido">
-
-                        <div id="contenedorProductos">
-                            <select id="productos" class"selectProductosLista">
-                                <option value=""> --Selecciona un Producto -- </option>
-                            </select>
-                        </div>
-                        <button id="agregarProductoBoton">Agregar Producto</button>
-
-                        <select id="clienteSelect">
-                            <option value=""> --Selecciona un Cliente-- </option>
-                        </select>
-
-                        <input id="cantidadPedido"   type="number" placeholder="Cantidad a comprar" min="0" step="1">
-                        
-                        <button id="btn-submit-creacion" type="submit">Crear Pedido</button>
-
-                    </form>
-                    
                 </div>
+                
             </section>
 
             <!-- FILA INFERIOR: 2 columnas -->

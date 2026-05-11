@@ -1,4 +1,4 @@
-import { store } from '../../../core/store.js';
+import { store } from '../../../../core/store.js';
 
 export function renderPedidosView() {
     console.log("hola desde epdidos")

@@ -1,4 +1,4 @@
-import { store } from '../../../core/store.js';
+import { store } from '../../../../core/store.js';
 
 export function renderProductosView() {
     const listProducto = document.getElementById('productos-list');

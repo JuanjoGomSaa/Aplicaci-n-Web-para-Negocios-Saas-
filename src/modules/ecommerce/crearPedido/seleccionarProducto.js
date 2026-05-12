@@ -1,7 +1,16 @@
 import {store} from '../../../core/store.js'
 import { renderProductosDisponibles } from './ui/seleccionarPedidoui.js';
 import { renderExiste, renderCarritoPedido } from './ui/carritoPedido.ui.js';
+
 let ultimoAnuncioId = null;
+
+function eliminarProductoCarrito(){
+    const divCarrito = document.getElementById('contenedor-estable');
+
+    divCarrito.removeEventListener('click', handleEliminarProductoCarrito);
+    divCarrito.addEventListener('click', handleEliminarProductoCarrito);
+} 
+
 
 export function seleccionarProducto(){
     renderProductosDisponibles();
@@ -9,6 +18,7 @@ export function seleccionarProducto(){
 
     productList.removeEventListener('click', handleAgregarCarrito);
     productList.addEventListener('click', handleAgregarCarrito);
+
 }
 
 function handleAgregarCarrito(e) {
@@ -30,8 +40,27 @@ function handleAgregarCarrito(e) {
     ultimoAnuncioId = null;
     const producto = store.productos.find(p => p.id === id);
     store.carrito.push(producto);  
+
+    renderCarritoPedido();
+    eliminarProductoCarrito();
+}
+
+function handleEliminarProductoCarrito (e){
+    const btnEliminarCarrito = e.target.closest('.btn-delete');
+
+    if(!btnEliminarCarrito){
+        return;
+    }
+    
+
+    const id = btnEliminarCarrito.dataset.id;
+
+    store.carrito = store.carrito.filter(c => c.id !== id);
+    
+
     renderCarritoPedido();
 }
+
 
 function closeAdvertencia() {
     const anuncioCard = document.querySelector('.anuncio-card');

@@ -2,7 +2,7 @@ import { store } from "../../../../core/store.js";
 
 export function renderCarritoPedido() {
     const productList = document.getElementById("cart-list");
-    productList.innerHTML = store.carrito.map(producto => `
+    productList.innerHTML = store.carrito.map(producto => ` 
         <div class="producto-card">
             <h3>${producto.id}</h3>
             <h3>${producto.nombre}</h3>

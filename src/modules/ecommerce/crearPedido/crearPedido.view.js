@@ -12,8 +12,10 @@ export function renderCrearPedido() {
 
             <section class="cart-section">
                 <h2>Tu Carrito</h2>
-                <div id="cart-list" class="cart-list">
-                    <p class="empty-cart">El carrito está vacío.</p>
+                <div id = "contenedor-estable">
+                    <div id="cart-list" class="cart-list">
+                        <p class="empty-cart">El carrito está vacío.</p>
+                    </div>
                 </div>
 
                 <div class="cart-summary">

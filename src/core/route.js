@@ -11,7 +11,11 @@ import { renderClientesView } from "../modules/clientes/crm/crmui.js";
 
 
 // Importaciones del Modulo de E-commerce
-import { renderECommerce } from "../modules/ecommerce/ecommerce.view.js";
+    // Menu de Ecommerce
+    import { renderMisProductos } from "../modules/ecommerce/misProductos/misProductos.view.js";
+    import { renderCrearPedido }  from "../modules/ecommerce/crearPedido/crearPedido.view.js";
+    import { renderListaPedidos } from "../modules/ecommerce/listaPedido/listaPedido.view.js";
+
 
 //Importaciones del modulo Reservas
 import { renderReservas } from "../modules/reservas/reservasview.js";   
@@ -26,7 +30,10 @@ const router = {
                     renderClientes();
                     setupCRM();
                 },   
-    'ecommerce': renderECommerce,
+    // Subrutas de E-commerce
+    'mis-productos':  renderMisProductos,
+    'crear-pedido':   renderCrearPedido,
+    'lista-pedidos':  renderListaPedidos,
     'reservas': renderReservas
 };
 

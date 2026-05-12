@@ -1,12 +1,12 @@
 import { store } from '../../../core/store.js';
 import { productosActivos, productosTotal } from './localstorage.js';
 import { renderProductosBuscados, renderProductosView } from './ui/productosui.js';
-import { renderPedidosView } from './ui/pedidosui.js';
-import { limpiarRenderSeleccionarProducto, renderSeleccionarProducto } from './ui/seleccionarProductoui.js';
+
 
 let contador      = 0;
 let banderaEditar = false;
 let productoAEditar = null;
+let controller = null; // AbortController activo
 
 contador = store.productos.length;
 
@@ -42,7 +42,6 @@ function handleCrear(e) {
 
     addProducto(producto);
     form.reset();
-
   
 }
 
@@ -80,28 +79,21 @@ function handleEditar(e) {
 
 // ── Setup principal ────────────────────────────────────────────────────────
 
+let setupDone = false;
+
 export function setupProductos() {
-    const form = document.getElementById('form-producto');
+    const form      = document.getElementById('form-producto');
+    const container = document.getElementById('productos-list');
 
     form.removeEventListener('submit', handleCrear);
     form.removeEventListener('submit', handleEditar);
-
-    if (!banderaEditar) {
-        console.log('HandleCrear registrado');
-        form.addEventListener('submit', handleCrear);
-    } else {
-        console.log('HandleEditar registrado');
-        form.addEventListener('submit', handleEditar);
-    }
-
-    const container = document.getElementById('productos-list');
     container.removeEventListener('click', handleClickContainer);
+
+    form.addEventListener('submit', banderaEditar ? handleEditar : handleCrear);
     container.addEventListener('click', handleClickContainer);
 
     renderProductosView();
     buscarProducto();
-
-    seleccionarProducto();
 }
 
 // ── Validación ─────────────────────────────────────────────────────────────
@@ -145,8 +137,6 @@ function addProducto(producto) {
     localStorage.setItem("productosTotal",   JSON.stringify(store.productos));
 
     renderProductosView();
-    seleccionarProducto();
-
 }
 
 // ── Click delegado (Editar / Eliminar) ────────────────────────────────────
@@ -180,26 +170,13 @@ function handleClickContainer(e) {
 
 function buscarProducto() {
     const input = document.getElementById('buscar-producto');
-
     input.addEventListener('input', (e) => {
         const query = e.target.value;
         store.productosBuscados = store.productosFiltrados.filter(p =>
             p.nombre.toLowerCase().includes(query.toLowerCase())
         );
-
-        if (store.productosBuscados.length === 0) {
-            renderProductosView();
-        } else {
-            renderProductosBuscados();
-        }
+        store.productosBuscados.length === 0
+            ? renderProductosView()
+            : renderProductosBuscados();
     });
 }
-
-//Seleccionar Productos 
-function seleccionarProducto(){
-    limpiarRenderSeleccionarProducto();
-    store.productosFiltrados.forEach(element => {
-        renderSeleccionarProducto(element);
-    });
-}
-

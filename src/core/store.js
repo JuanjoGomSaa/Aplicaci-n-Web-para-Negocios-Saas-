@@ -3,6 +3,8 @@ export const store = {
   clientesFiltrados: [],
   clientesBuscados: [],
   productos: [],
+  productosFiltrados:[],
+  carrito: [],
   pedidos: [],
   reservas: []
 }

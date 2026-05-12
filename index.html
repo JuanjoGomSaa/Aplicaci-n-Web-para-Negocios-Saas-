@@ -11,6 +11,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="./src/styles/clientecard.css">
     <link rel="stylesheet" href="./src/styles/ecommerce.css">
+    <link rel="stylesheet" href="./src/styles/crearPedido.css">
     <!-- GoogleFonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +32,16 @@
           <ul>
             <li><a  data-route="dashboard" class="navigator_link">Dashboard</a></li>
             <li><a  data-route="clientes" class="navigator_link">Clientes</a></li>
-            <li><a  data-route="ecommerce" class="navigator_link">E-commerce</a></li>
+
+            <li class="has-submenu">
+              <a data-route="ecommerce" class="navigator_link">E-commerce</a>
+              <ul class="submenu" id="submenu-ecommerce">
+                <li><a data-route="mis-productos" class="navigator_link">Mis Productos</a></li>
+                <li><a data-route="crear-pedido" class="navigator_link">Crear Pedido</a></li>
+                <li><a data-route="lista-pedidos" class="navigator_link">Lista de Pedidos</a></li>  
+              </ul>
+            </li>
+            
             <li><a  data-route="reservas" class="navigator_link">Reservas</a></li>
           </ul>
         </nav>

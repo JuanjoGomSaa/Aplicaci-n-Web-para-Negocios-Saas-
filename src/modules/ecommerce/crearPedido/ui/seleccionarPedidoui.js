@@ -8,7 +8,7 @@ export function renderProductosDisponibles() {
             <h3>${producto.id}</h3>
             <h3>${producto.nombre}</h3>
             <div class="producto-actions">
-                <button class="btn-add" data-id="${producto.id}">Agregar al Carrito</button>
+                <button class="btn-add" data-id="${producto.id}" data-precio="${producto.precio}">Agregar al Carrito</button>
             </div>
         </div>
     `).join('');

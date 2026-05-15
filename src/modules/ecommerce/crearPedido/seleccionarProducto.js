@@ -1,8 +1,10 @@
 import {store} from '../../../core/store.js'
 import { renderProductosDisponibles } from './ui/seleccionarPedidoui.js';
-import { renderExiste, renderCarritoPedido } from './ui/carritoPedido.ui.js';
+import { renderExiste, renderCarritoPedido } from './ui/carritoPedidoui.js';
+import { renderTotalPedido } from './ui/totalPedidoui.js';
 
 let ultimoAnuncioId = null;
+let total = 0;
 
 function eliminarProductoCarrito(){
     const divCarrito = document.getElementById('contenedor-estable');
@@ -24,7 +26,7 @@ export function seleccionarProducto(){
 function handleAgregarCarrito(e) {
     const btn = e.target.closest('.btn-add');
     if (!btn) return;
-    
+
     const id = btn.dataset.id;
     const existeEnCarrito = store.carrito.find(p => p.id === id);
     
@@ -36,6 +38,10 @@ function handleAgregarCarrito(e) {
         }
         return;
     }
+
+    total = total + parseFloat(btn.dataset.precio);
+    precioTotal(); 
+    
 
     ultimoAnuncioId = null;
     const producto = store.productos.find(p => p.id === id);
@@ -54,9 +60,11 @@ function handleEliminarProductoCarrito (e){
     
 
     const id = btnEliminarCarrito.dataset.id;
-
-    store.carrito = store.carrito.filter(c => c.id !== id);
+    total =  total - parseFloat(btnEliminarCarrito.dataset.precio);
     
+    precioTotal(); 
+    
+    store.carrito = store.carrito.filter(c => c.id !== id);
 
     renderCarritoPedido();
 }
@@ -70,4 +78,12 @@ function closeAdvertencia() {
         ultimoAnuncioId = null;
         renderCarritoPedido();
     });
+}
+
+function precioTotal() {
+    renderTotalPedido(total);
+}
+
+export function resetCarrito() {
+    total = 0;
 }

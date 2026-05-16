@@ -1,11 +1,12 @@
-import {seleccionarProducto, resetCarrito} from './seleccionarProducto.js';
+import {seleccionarProducto} from './seleccionarProducto.js';
 import { store } from '../../../core/store.js';
+import { carritoTotal } from './seleccionarProducto.js';
 
 // misProductos.view.js
 export function renderCrearPedido() {
     // Reset al montar la vista
     store.carrito = [];
-    resetCarrito();
+    carritoTotal();
 
     const content = document.getElementById("content");
     content.innerHTML = `    

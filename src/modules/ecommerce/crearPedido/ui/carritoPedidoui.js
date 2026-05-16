@@ -6,9 +6,9 @@ export function renderCarritoPedido() {
         <div class="producto-card">
             <h3>${producto.id}</h3>
             <h3>${producto.nombre}</h3>
-            <input id="cantidad-producto" type="number" placeholder="Cantidad" min="1" step="1">
+            <input class="cantidad-producto" type="number" placeholder="Cantidad" min="1" step="1" value = "1" data-id="${producto.id}">
             <div class="producto-actions">
-                <button class="btn-delete" data-id="${producto.id}">Eliminar del Carrito</button>
+                <button class="btn-delete" data-id="${producto.id}" data-precio="${producto.precio}">Eliminar del Carrito</button>
             </div>
         </div>
     `).join('');

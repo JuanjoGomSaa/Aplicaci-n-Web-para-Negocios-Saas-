@@ -4,14 +4,22 @@ import { renderExiste, renderCarritoPedido } from './ui/carritoPedidoui.js';
 import { renderTotalPedido } from './ui/totalPedidoui.js';
 
 let ultimoAnuncioId = null;
-let total = 0;
+let total;
+
 
 function eliminarProductoCarrito(){
     const divCarrito = document.getElementById('contenedor-estable');
 
     divCarrito.removeEventListener('click', handleEliminarProductoCarrito);
     divCarrito.addEventListener('click', handleEliminarProductoCarrito);
-} 
+}
+
+
+function escucharCantidades() {
+    const divCarrito = document.getElementById('contenedor-estable');
+    divCarrito.removeEventListener('input', handleCantidad);
+    divCarrito.addEventListener('input', handleCantidad);
+}
 
 
 export function seleccionarProducto(){
@@ -39,16 +47,16 @@ function handleAgregarCarrito(e) {
         return;
     }
 
-    total = total + parseFloat(btn.dataset.precio);
-    precioTotal(); 
-    
-
     ultimoAnuncioId = null;
     const producto = store.productos.find(p => p.id === id);
     store.carrito.push(producto);  
 
-    renderCarritoPedido();
+    renderCarritoPedido();    
     eliminarProductoCarrito();
+
+    escucharCantidades(); 
+    totalPedido();
+
 }
 
 function handleEliminarProductoCarrito (e){
@@ -58,15 +66,11 @@ function handleEliminarProductoCarrito (e){
         return;
     }
     
-
     const id = btnEliminarCarrito.dataset.id;
-    total =  total - parseFloat(btnEliminarCarrito.dataset.precio);
-    
-    precioTotal(); 
-    
     store.carrito = store.carrito.filter(c => c.id !== id);
 
     renderCarritoPedido();
+    totalPedido();
 }
 
 
@@ -80,10 +84,24 @@ function closeAdvertencia() {
     });
 }
 
-function precioTotal() {
+
+export function carritoTotal (){
+    total = 0;
+}
+
+
+function totalPedido() {
+    total = 0;
+    store.carrito.forEach(producto => {
+        const input = document.querySelector(`.cantidad-producto[data-id="${producto.id}"]`);
+        const cantidad = input ? parseFloat(input.value) || 1 : 1;
+        total += parseFloat(producto.precio) * cantidad;
+    });
+
     renderTotalPedido(total);
 }
 
-export function resetCarrito() {
-    total = 0;
+function handleCantidad(e) {
+    if (!e.target.classList.contains('cantidad-producto')) return;
+    totalPedido();
 }
